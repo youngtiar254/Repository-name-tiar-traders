@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tiar Traders - Buy. Sell. Import</title>
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+
+<style>
+body{font-family:'Roboto',sans-serif;background:#fff;margin:0}
+h1{text-align:center;margin-top:20px}
+#carsGrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:20px;padding:20px}
+.car-card{border:1px solid #ddd;border-radius:10px;overflow:hidden}
+.car-card img{width:100%}
+.btn{background:#000;color:#fff;padding:8px;border:none;border-radius:5px;cursor:pointer}
+#chatBtn{position:fixed;bottom:20px;right:20px;background:black;color:white;padding:15px;border-radius:50%;cursor:pointer}
+#chatBox,#agentForm{position:fixed;bottom:80px;right:20px;width:300px;background:white;border:1px solid #ddd;border-radius:10px;padding:10px;display:none}
+</style>
+</head>
+<body>
+
+<h1>Get unbeatable offers by Tiar Traders</h1>
+<h2 style="text-align:center">Buy. Sell. Import</h2>
+
+<input id="searchInput" placeholder="Search car..." style="display:block;margin:20px auto;padding:10px;width:90%;max-width:400px">
+
+<div id="carsGrid"></div>
+
+<div style="padding:20px">
+<h3>Cart</h3>
+<div id="cartItems"></div>
+<p>Total: <span id="totalPrice">$0</span></p>
+</div>
+
+<div class="checkout" style="padding:20px">
+<input id="customerName" placeholder="Name"><br>
+<input id="customerEmail" placeholder="Email"><br>
+<input id="customerPhone" placeholder="Phone"><br>
+<input type="checkbox" id="agreeTerms"> Agree to Terms
+<br>
+<button onclick="placeOrder()" class="btn">Order</button>
+</div>
+
+<!-- CHAT BUTTON -->
+<div id="chatBtn" onclick="openChat()">💬</div>
+
+<!-- CHAT BOX -->
+<div id="chatBox">
+<div id="chatMessages" style="height:150px;overflow:auto"></div>
+<input id="chatInput" placeholder="Type...">
+<button onclick="sendMessage()" class="btn">Send</button>
+</div>
+
+<!-- AGENT FORM -->
+<div id="agentForm">
+<h4>Contact Agent</h4>
+<input id="clientName" placeholder="Name"><br>
+<input id="clientPhone" placeholder="Phone (+code)"><br>
+<input id="clientEmail" placeholder="Email"><br>
+<button onclick="sendEnquiry()" class="btn">Send</button>
+</div>
+
+<script>
+let cart=[];
+
+const cars=[
+{title:"Toyota Allion",price:25000},
+{title:"BMW X5",price:45000},
+{title:"Mercedes C200",price:40000}
+];
+
+function renderCars(){
+let grid=document.getElementById('carsGrid');
+grid.innerHTML='';
+cars.forEach(c=>{
+let div=document.createElement('div');
+div.className='car-card';
+div.innerHTML=`<h3>${c.title}</h3><p>$${c.price}</p><button onclick="addToCart('${c.title}',${c.price})" class="btn">Add</button>`;
+grid.appendChild(div);
+});
+}
+
+function addToCart(n,p){cart.push({n,p});updateCart();}
+function updateCart(){
+let list=document.getElementById('cartItems');list.innerHTML='';let t=0;
+cart.forEach(i=>{t+=i.p;list.innerHTML+=`<div>${i.n} - $${i.p}</div>`});
+document.getElementById('totalPrice').innerText='$'+t;
+}
+
+function placeOrder(){
+let name=document.getElementById('customerName').value;
+let email=document.getElementById('customerEmail').value;
+let phone=document.getElementById('customerPhone').value;
+if(!document.getElementById('agreeTerms').checked){alert('Agree to terms');return;}
+let msg=`Order Tiar Traders\nName:${name}\nPhone:${phone}`;
+window.open(`https://wa.me/254742322240?text=${encodeURIComponent(msg)}`);
+window.open(`mailto:tiartraders@gmail.com?body=${encodeURIComponent(msg)}`);
+}
+
+// CHAT BOT
+function openChat(){
+let box=document.getElementById('chatBox');
+box.style.display='block';
+document.getElementById('chatMessages').innerHTML='<p>Bot: Welcome to Tiar Traders, how may we assist you today?</p>';
+}
+
+function sendMessage(){
+let msg=document.getElementById('chatInput').value;
+let chat=document.getElementById('chatMessages');
+chat.innerHTML+=`<p>You: ${msg}</p>`;
+setTimeout(()=>{
+chat.innerHTML+='<p>Bot: Let me connect you to one of our live agents...</p>';
+document.getElementById('chatBox').style.display='none';
+document.getElementById('agentForm').style.display='block';
+},1000);
+}
+
+function sendEnquiry(){
+let name=document.getElementById('clientName').value;
+let phone=document.getElementById('clientPhone').value;
+let email=document.getElementById('clientEmail').value;
+let msg=`Customer Enquiry\nName:${name}\nPhone:${phone}\nEmail:${email}`;
+window.open(`https://wa.me/254742322240?text=${encodeURIComponent(msg)}`);
+window.open(`mailto:tiartraders@gmail.com?body=${encodeURIComponent(msg)}`);
+alert('Sent!');
+}
+
+renderCars();
+</script>
+
+<footer style="text-align:center;padding:20px">© 2026 Tiar Traders</footer>
+
+</body>
+</html>
